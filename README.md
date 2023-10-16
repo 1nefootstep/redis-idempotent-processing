@@ -11,9 +11,7 @@ Different strategies are used and compared against each other.
 1. Build the image `docker compose build src/main/resources/docker-redis-cluster`
 2. Run `docker compose -f src/main/resources/docker-redis-cluster/docker-compose.yaml up -d` to start Redis cluster
 2. Start the spring boot application
-3.
-
-Run `curl -X GET http://localhost:8080/benchmark/all?testFilePath=scenario1-9-500 -H 'Content-Type: application/json'`
+3. Run `curl -X GET http://localhost:8080/benchmark/all?testFilePath=scenario1-9-500 -H 'Content-Type: application/json'`
 to run the benchmark
 
 ## Benchmark results
