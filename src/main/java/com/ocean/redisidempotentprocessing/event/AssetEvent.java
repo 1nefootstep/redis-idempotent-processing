@@ -8,11 +8,11 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class Expense {
+public class AssetEvent {
     @JsonProperty("ownerId")
     private String ownerId;
     @JsonProperty("businessId")
     private String businessId;
-    @JsonProperty("expense")
-    private String expense;
+    @JsonProperty("asset")
+    private String asset;
 }

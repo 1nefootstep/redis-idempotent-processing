@@ -1,6 +1,6 @@
 package com.ocean.redisidempotentprocessing;
 
-import com.ocean.redisidempotentprocessing.event.Expense;
+import com.ocean.redisidempotentprocessing.event.AssetEvent;
 import com.ocean.redisidempotentprocessing.util.JsonUtil;
 
 import java.io.FileWriter;
@@ -8,23 +8,23 @@ import java.io.IOException;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
-public class GenerateBenchmarkTestData {
+public class GenerateAssetBenchmarkTestData {
     public static void main(String[] args) {
         ThreadLocalRandom threadLocalRandom = ThreadLocalRandom.current();
 
-        List<Expense> result = threadLocalRandom.doubles(30000, 1d, 3000d).mapToObj(
+        List<AssetEvent> result = threadLocalRandom.doubles(30000, 1d, 3000d).mapToObj(
                         expense -> {
                             String ownerId = String.valueOf(threadLocalRandom.nextInt(1, 10));
                             String businessId = String.valueOf(threadLocalRandom.nextInt(1, 2000));
 
-                            return new Expense(
+                            return new AssetEvent(
                                     ownerId,
                                     businessId,
                                     String.valueOf(expense));
                         })
                 .toList();
 
-        try (FileWriter fileWriter = new FileWriter("src/main/resources/benchmark/test-9-2000.json")) {
+        try (FileWriter fileWriter = new FileWriter("src/main/resources/benchmark/scenario1-9-2000.json")) {
             fileWriter.write(JsonUtil.toJSONString(result));
         } catch (IOException e) {
             e.printStackTrace();

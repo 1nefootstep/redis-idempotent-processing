@@ -1,17 +1,17 @@
 package com.ocean.redisidempotentprocessing.service.impl;
 
-import com.ocean.redisidempotentprocessing.event.Expense;
-import com.ocean.redisidempotentprocessing.service.OwnerExpenseService;
+import com.ocean.redisidempotentprocessing.event.AssetEvent;
+import com.ocean.redisidempotentprocessing.service.OwnerAssetService;
 import com.ocean.redisidempotentprocessing.service.SumRedisHashStrategy;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 
-public class OwnerExpenseServiceImpl implements OwnerExpenseService {
+public class OwnerAssetServiceImpl implements OwnerAssetService {
     private final SumRedisHashStrategy sumRedisHashStrategy;
     private static final String REDIS_KEY_TEMPLATE = "ocean:expense:{owner:%s}";
 
-    public OwnerExpenseServiceImpl(SumRedisHashStrategy sumRedisHashStrategy) {
+    public OwnerAssetServiceImpl(SumRedisHashStrategy sumRedisHashStrategy) {
         this.sumRedisHashStrategy = sumRedisHashStrategy;
     }
 
@@ -21,10 +21,10 @@ public class OwnerExpenseServiceImpl implements OwnerExpenseService {
     }
 
     @Override
-    public BigDecimal updateExpenseAndAggregate(Expense expense) {
-        String redisKey = this.getRedisKey(expense);
-        BigDecimal bdExpense = new BigDecimal(expense.getExpense()).setScale(16, RoundingMode.FLOOR);
-        return sumRedisHashStrategy.setAndSum(redisKey, expense.getBusinessId(), bdExpense);
+    public BigDecimal updateAssetAndAggregate(AssetEvent assetEvent) {
+        String redisKey = this.getRedisKey(assetEvent);
+        BigDecimal bdExpense = new BigDecimal(assetEvent.getAsset()).setScale(16, RoundingMode.FLOOR);
+        return sumRedisHashStrategy.setAndSum(redisKey, assetEvent.getBusinessId(), bdExpense);
     }
 
     @Override
@@ -32,8 +32,8 @@ public class OwnerExpenseServiceImpl implements OwnerExpenseService {
         return sumRedisHashStrategy.sum(this.getRedisKey(ownerId));
     }
 
-    private String getRedisKey(Expense expense) {
-        return this.getRedisKey(expense.getOwnerId());
+    private String getRedisKey(AssetEvent assetEvent) {
+        return this.getRedisKey(assetEvent.getOwnerId());
     }
 
     private String getRedisKey(String ownerId) {
