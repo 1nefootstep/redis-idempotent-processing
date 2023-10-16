@@ -2,9 +2,7 @@
 
 ## Description
 
-This project is a simple example of how to use Redis/Redisson to process events.
-
-Specifically, it shows how to update and sum a group of numbers while maintaining idempotency.
+This project is an example of how to use Redis to process events idempotently when events might be reprocessed.
 
 Different strategies are used and compared against each other.
 
