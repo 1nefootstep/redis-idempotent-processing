@@ -11,9 +11,9 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 
-@Component("memberAggregateByHashCount")
+@Component("memberAggregateByHashCountAndScript")
 @Slf4j
-public class MemberAggregateByHashCount implements MemberAggregateStrategy {
+public class MemberAggregateByHashCountAndScript implements MemberAggregateStrategy {
     @Autowired
     private RedissonClient redissonClient;
 

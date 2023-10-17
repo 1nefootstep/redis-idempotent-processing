@@ -55,7 +55,7 @@ public class BenchmarkController {
                                @Qualifier("sumRedisHashByVariableAndPipelineAndLock") SumRedisHashStrategy variableAndLockStrategy,
                                @Qualifier("sumRedisHashByVariableAndPipelineAndCache") SumRedisHashStrategy variableAndPipelineAndCacheStrategy,
                                @Qualifier("memberAggregateBySetMerge") MemberAggregateStrategy memberAggregateStrategySetMerge,
-                               @Qualifier("memberAggregateByHashCount") MemberAggregateStrategy memberAggregateStrategyHashCount,
+                               @Qualifier("memberAggregateByHashCountAndScript") MemberAggregateStrategy memberAggregateStrategyHashCount,
                                @Qualifier("memberAggregateBySetMergeInJvm") MemberAggregateStrategy memberAggregateStrategySetMergeInJvm) {
         ownerAssetServiceBrute = new OwnerAssetServiceImpl(bruteForceStrategy);
         ownerAssetServicePipeline = new OwnerAssetServiceImpl(variableAndPipelineStrategy);

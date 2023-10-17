@@ -18,8 +18,7 @@ public class GenerateMemberBenchmarkTestData {
     public static void main(String[] args) {
         ThreadLocalRandom threadLocalRandom = ThreadLocalRandom.current();
         Map<String, Map<String, Set<String>>> ownerMap = new HashMap<>();
-        // 1000 users, 9 owners, 100 businesses
-
+        // 1000 users, 9 owners, 500 businesses
         List<MemberEvent> result = threadLocalRandom.ints(30000, 1, 1001).mapToObj(
                         member -> {
                             int i = threadLocalRandom.nextInt(1, 11);
@@ -51,7 +50,7 @@ public class GenerateMemberBenchmarkTestData {
                                 }
                             }
                             String ownerId = String.valueOf(threadLocalRandom.nextInt(1, 10));
-                            String businessId = String.valueOf(threadLocalRandom.nextInt(1, 101));
+                            String businessId = String.valueOf(threadLocalRandom.nextInt(1, 501));
                             String memberId = String.valueOf(member);
 
                             boolean isMember = ownerMap.computeIfAbsent(ownerId, x -> new HashMap<>())

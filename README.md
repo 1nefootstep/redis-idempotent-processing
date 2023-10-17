@@ -2,7 +2,9 @@
 
 ## Description
 
-This project is an example of how to use Redis to process events idempotently when events might be reprocessed.
+This project is a simple example of how to use Redis/Redisson to process events.
+
+Specifically, it shows how to update and sum a group of numbers while maintaining idempotency.
 
 Different strategies are used and compared against each other.
 
@@ -11,7 +13,9 @@ Different strategies are used and compared against each other.
 1. Build the image `docker compose build src/main/resources/docker-redis-cluster`
 2. Run `docker compose -f src/main/resources/docker-redis-cluster/docker-compose.yaml up -d` to start Redis cluster
 2. Start the spring boot application
-3. Run `curl -X GET http://localhost:8080/benchmark/all?testFilePath=scenario1-9-500 -H 'Content-Type: application/json'`
+3.
+
+Run `curl -X GET http://localhost:8080/benchmark/all?testFilePath=scenario1-9-500 -H 'Content-Type: application/json'`
 to run the benchmark
 
 ## Benchmark results
@@ -22,31 +26,39 @@ Descending by P99 QPS.
 
 For 9 owners, up to 500 entries in the hash, 30,000 events and reprocessing additional ~1440 events.
 
-| Strategy                 | Overall QPS | p99 QPS | Total Time Elapsed (s) |
-|--------------------------|-------------|---------|------------------------|
-| VariableAndPipeline      | 2954.43     | 2169.30 | 10.64                  |
-| VariablePipelineAndCache | 2130.96     | 1357.32 | 14.75                  |
-| VariablePipelineAndLock  | 901.15      | 733.42  | 34.89                  |
-| bruteForce               | 1041.06     | 550.89  | 30.20                  |
+| Strategy                 | Overall QPS | p99 QPS | Time Elapsed (s) | Speedup |
+|--------------------------|-------------|---------|------------------|---------|
+| VariableAndPipeline      | 2954.43     | 2169.30 | 10.64            | 2.84x   |
+| VariablePipelineAndCache | 2130.96     | 1357.32 | 14.75            | 2.05x   |
+| VariablePipelineAndLock  | 901.15      | 733.42  | 34.89            | 0.87x   |
+| bruteForce               | 1041.06     | 550.89  | 30.20            | 1.00x   |
 
 For 9 owners, up to 2000 entries in the hash, 30,000 events and reprocessing additional ~1440 events.
 
-| Strategy                 | Overall QPS | p99 QPS | Total Time Elapsed (s) |
-|--------------------------|-------------|---------|------------------------|
-| VariableAndPipeline      | 3033.21     | 2173.28 | 10.37                  |
-| VariablePipelineAndCache | 2176.71     | 1577.85 | 14.44                  |
-| VariablePipelineAndLock  | 912.16      | 758.08  | 34.47                  |
-| bruteForce               | 454.95      | 243.46  | 69.11                  |
+| Strategy                 | Overall QPS | p99 QPS | Time Elapsed (s) | Speedup |
+|--------------------------|-------------|---------|------------------|---------|
+| VariableAndPipeline      | 3033.21     | 2173.28 | 10.37            | 6.66x   |
+| VariablePipelineAndCache | 2176.71     | 1577.85 | 14.44            | 4.79x   |
+| VariablePipelineAndLock  | 912.16      | 758.08  | 34.47            | 2.00x   |
+| bruteForce               | 454.95      | 243.46  | 69.11            | 1.00x   |
 
 ### Scenario 2: Number of unique members
 
 For 9 owners, up to 100 businesses, up to 1000 users, 30,000 events and reprocessing additional ~1440 events.
 
-| Strategy                       | Overall QPS | p99 QPS | Total Time Elapsed (s) |
-|--------------------------------|-------------|---------|------------------------|
-| MemberAggregateByHashCount     | 5480.26     | 3770.21 | 5.74                   |
-| MemberAggregateBySetMerge      | 754.12      | 351.52  | 41.69                  |
-| MemberAggregateBySetMergeInJvm | 397.64      | 185.99  | 79.07                  |
+| Strategy                            | Overall QPS | p99 QPS | Time Elapsed (s) | Speedup |
+|-------------------------------------|-------------|---------|------------------|---------|
+| MemberAggregateByHashCountAndScript | 5480.26     | 3770.21 | 5.74             | 13.78x  |
+| MemberAggregateBySetMerge           | 754.12      | 351.52  | 41.69            | 1.90x   |
+| MemberAggregateBySetMergeInJvm      | 397.64      | 185.99  | 79.07            | 1.00x   |
+
+For 9 owners, up to 500 businesses, up to 1000 users, 30,000 events and reprocessing additional ~1440 events.
+
+| Strategy                            | Overall QPS | p99 QPS | Time Elapsed (s) | Speedup |
+|-------------------------------------|-------------|---------|------------------|---------|
+| MemberAggregateByHashCountAndScript | 5497.31     | 3776.32 | 5.72             | 34.27x  |
+| MemberAggregateBySetMerge           | 278.95      | 127.18  | 112.71           | 1.74x   |
+| MemberAggregateBySetMergeInJvm      | 160.38      | 91.13   | 196.04           | 1.00x   |
 
 ## Scenarios
 
